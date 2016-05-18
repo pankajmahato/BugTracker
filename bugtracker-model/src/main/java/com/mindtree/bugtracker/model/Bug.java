@@ -2,24 +2,27 @@ package com.mindtree.bugtracker.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "Bug")
+@SequenceGenerator(name = "bug_seq", sequenceName = "BUG_SEQ")
 public class Bug {
 
 	@Id
 	@Column(name = "bugId")
-	@GenericGenerator(name = "gen", strategy = "increment")
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "bug_seq")
 	private int bugId;
 
 	@Column(name = "title")
@@ -31,12 +34,12 @@ public class Bug {
 	@Column(name = "dateSubmitted")
 	private Date dateSubmitted;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "support_id")
 	private User support;
 
 	@Column(name = "status")

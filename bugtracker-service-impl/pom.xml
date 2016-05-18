@@ -5,11 +5,11 @@
     <artifactId>BugTracker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>bugtracker-persistence-impl</artifactId>
+  <artifactId>bugtracker-service-impl</artifactId>
   <dependencies>
   	<dependency>
   		<groupId>com.mindtree.bugtracker</groupId>
-  		<artifactId>bugtracker-model</artifactId>
+  		<artifactId>bugtracker-persistence-impl</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   </dependencies>
