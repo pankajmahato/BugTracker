@@ -1,22 +1,137 @@
 package com.mindtree.bugtracker.persistence.impl;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 import com.mindtree.bugtracker.model.Bug;
+import com.mindtree.bugtracker.model.Employee;
+import com.mindtree.bugtracker.model.Role;
+import com.mindtree.bugtracker.model.Status;
+import com.mindtree.bugtracker.persistence.interfaces.PersistenceManager;
 
-public class PersistenceManager {
+public class PersistenceManagerImpl implements PersistenceManager {
 
+	private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistence");
+
+	@Override
 	public Bug addBug(Bug bug) {
 
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistence");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		if (entityManager != null) {
+			try {
+				entityManager.getTransaction().begin();
+				entityManager.persist(bug);
+				entityManager.getTransaction().commit();
+			} catch (PersistenceException persistenceException) {
+				entityManager.getTransaction().rollback();
+				persistenceException.printStackTrace();
+			} finally {
+				if (entityManager != null) {
+					entityManager.close();
+				}
+			}
+		}
+		return bug;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Bug> getBugs(Employee employee) {
+
+		List<Bug> bugList = null;
+		String bugQuery;
+
+		if (employee.getRole().equals(Role.USER)) {
+			bugQuery = "SELECT b from BUG b WHERE b.user.id=:id";
+		} else {
+			bugQuery = "SELECT b from BUG b WHERE b.support.id=:id";
+		}
+
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-		entityManager.getTransaction().begin();
-		entityManager.persist(bug);
-		entityManager.getTransaction().commit();
-		entityManager.close();
-		return bug;
+		Query query = entityManager.createQuery(bugQuery);
+		query.setParameter("id", employee.getId());
+		if (entityManager != null) {
+			try {
+				bugList = (List<Bug>) query.getResultList();
+			} catch (PersistenceException persistenceException) {
+				persistenceException.printStackTrace();
+			} finally {
+				if (entityManager != null) {
+					entityManager.close();
+				}
+			}
+		}
+		return bugList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Bug> getAllBugs(Status status) {
+		List<Bug> bugList = null;
+		String bugQuery;
+
+		if (status != null) {
+			bugQuery = "SELECT b from BUG b WHERE b.status=:status";
+		} else {
+			bugQuery = "SELECT b from BUG b";
+		}
+
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+		Query query = entityManager.createQuery(bugQuery);
+		if (status != null) {
+			query.setParameter("status", status.toString());
+		}
+		if (entityManager != null) {
+			try {
+				bugList = (List<Bug>) query.getResultList();
+			} catch (PersistenceException persistenceException) {
+				persistenceException.printStackTrace();
+			} finally {
+				if (entityManager != null) {
+					entityManager.close();
+				}
+			}
+		}
+		return bugList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Employee validateEmployee(Employee employee) {
+
+		List<Employee> employeeList = null;
+
+		String loginQuery;
+
+		loginQuery = "from Employee e WHERE e.name=:username AND e.password=:password";
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		Query query = entityManager.createQuery(loginQuery);
+		query.setParameter("username", employee.getName());
+		query.setParameter("password", employee.getPassword());
+		if (entityManager != null) {
+			try {
+				employeeList = (List<Employee>) query.getResultList();
+				if (employeeList != null && employeeList.size() == 1) {
+					employee = employeeList.get(0);
+					employee.setPassword(null);
+				} else {
+					employee = null;
+				}
+			} catch (PersistenceException persistenceException) {
+				persistenceException.printStackTrace();
+			} finally {
+				if (entityManager != null) {
+					entityManager.close();
+				}
+			}
+		}
+		return employee;
 	}
 }

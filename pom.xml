@@ -11,6 +11,8 @@
 		<module>bugtracker-model</module>
 		<module>bugtracker-webapp</module>
 		<module>bugtracker-service-impl</module>
+		<module>bugtracker-persistence-interfaces</module>
+		<module>bugtracker-service-interfaces</module>
 	</modules>
 	<dependencies>
 		<dependency>

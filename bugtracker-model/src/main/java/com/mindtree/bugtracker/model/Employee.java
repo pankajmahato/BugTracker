@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,37 +16,37 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "User")
-@SequenceGenerator(name = "user_seq", sequenceName = "USER_SEQ")
-public class User {
+@Table(name = "EMPLOYEE")
+@SequenceGenerator(name = "employee_seq", sequenceName = "EMPLOYEE_SEQ", allocationSize = 1, initialValue = 1)
+public class Employee {
 
 	@Id
-	@Column(name = "userId")
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "user_seq")
-	private int userId;
+	@Column(name = "ID")
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "employee_seq")
+	private int id;
 
-	@Column(name = "name")
+	@Column(name = "NAME")
 	private String name;
 
-	@Column(name = "password")
+	@Column(name = "PASSWORD")
 	private String password;
 
-	@Column(name = "role")
+	@Column(name = "ROLE")
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-	private Set<Bug> bugs;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
+	private Set<Bug> user;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "support")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "support", fetch = FetchType.EAGER)
 	private Set<Bug> support;
 
-	public int getUserId() {
-		return userId;
+	public int getId() {
+		return id;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -72,12 +73,12 @@ public class User {
 		this.role = role;
 	}
 
-	public Set<Bug> getBugs() {
-		return bugs;
+	public Set<Bug> getUser() {
+		return user;
 	}
 
-	public void setBugs(Set<Bug> bugs) {
-		this.bugs = bugs;
+	public void setUser(Set<Bug> user) {
+		this.user = user;
 	}
 
 	public Set<Bug> getSupport() {

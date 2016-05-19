@@ -9,7 +9,7 @@
   <dependencies>
   	<dependency>
   		<groupId>com.mindtree.bugtracker</groupId>
-  		<artifactId>bugtracker-persistence-impl</artifactId>
+  		<artifactId>bugtracker-service-interfaces</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   </dependencies>

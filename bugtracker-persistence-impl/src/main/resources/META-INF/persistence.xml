@@ -5,7 +5,7 @@
 	<persistence-unit name="myPersistence">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>com.mindtree.bugtracker.model.Bug</class>
-		<class>com.mindtree.bugtracker.model.User</class>
+		<class>com.mindtree.bugtracker.model.Employee</class>
 		<properties>
 			<!-- Configuring JDBC properties -->
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
@@ -15,7 +15,7 @@
 			<property name="javax.persistence.jdbc.password" value="root" />
 
 			<!-- Hibernate properties -->
-			<property name="hibernate.hbm2ddl.auto" value="create" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />

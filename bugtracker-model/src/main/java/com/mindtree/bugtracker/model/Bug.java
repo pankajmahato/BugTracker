@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,42 +17,42 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Bug")
-@SequenceGenerator(name = "bug_seq", sequenceName = "BUG_SEQ")
+@Table(name = "BUG")
+@SequenceGenerator(name = "bug_seq", sequenceName = "BUG_SEQ", allocationSize = 1, initialValue = 1)
 public class Bug {
 
 	@Id
-	@Column(name = "bugId")
+	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "bug_seq")
-	private int bugId;
+	private int id;
 
-	@Column(name = "title")
+	@Column(name = "TITLE")
 	private String title;
 
-	@Column(name = "description")
+	@Column(name = "DESCRIPTION")
 	private String description;
 
-	@Column(name = "dateSubmitted")
+	@Column(name = "DATE_SUBMITTED")
 	private Date dateSubmitted;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "USER_ID")
+	private Employee user;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "support_id")
-	private User support;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "SUPPORT_ID")
+	private Employee support;
 
-	@Column(name = "status")
+	@Column(name = "STATUS")
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
-	public int getBugId() {
-		return bugId;
+	public int getId() {
+		return id;
 	}
 
-	public void setBugId(int bugId) {
-		this.bugId = bugId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getTitle() {
@@ -78,19 +79,19 @@ public class Bug {
 		this.dateSubmitted = dateSubmitted;
 	}
 
-	public User getUser() {
+	public Employee getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(Employee user) {
 		this.user = user;
 	}
 
-	public User getSupport() {
+	public Employee getSupport() {
 		return support;
 	}
 
-	public void setSupport(User support) {
+	public void setSupport(Employee support) {
 		this.support = support;
 	}
 

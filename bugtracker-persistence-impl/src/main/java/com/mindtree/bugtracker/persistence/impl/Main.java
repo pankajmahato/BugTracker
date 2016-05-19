@@ -5,18 +5,19 @@ import java.util.Date;
 import com.mindtree.bugtracker.model.Bug;
 import com.mindtree.bugtracker.model.Role;
 import com.mindtree.bugtracker.model.Status;
-import com.mindtree.bugtracker.model.User;
+import com.mindtree.bugtracker.model.Employee;
+import com.mindtree.bugtracker.persistence.interfaces.PersistenceManager;
 
 public class Main {
 
 	public static void main(String[] args) {
 		Bug bug = new Bug();
-		User user = new User();
+		Employee user = new Employee();
 		user.setName("name");
 		user.setPassword("password");
 		user.setRole(Role.USER);
 
-		User support = new User();
+		Employee support = new Employee();
 		support.setName("name");
 		support.setPassword("password");
 		support.setRole(Role.SUPPORT);
@@ -28,7 +29,7 @@ public class Main {
 		bug.setTitle("title");
 		bug.setUser(user);
 
-		PersistenceManager manager = new PersistenceManager();
+		PersistenceManager manager = new PersistenceManagerImpl();
 		manager.addBug(bug);
 		System.out.println("success");
 	}
