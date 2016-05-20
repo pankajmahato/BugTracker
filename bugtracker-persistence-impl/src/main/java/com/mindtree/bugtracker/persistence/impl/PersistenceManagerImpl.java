@@ -21,9 +21,24 @@ public class PersistenceManagerImpl implements PersistenceManager {
 	@Override
 	public Bug addBug(Bug bug) {
 
+		Employee employee = null;
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		int id = 0;
+
 		if (entityManager != null) {
 			try {
+
+				if (bug.getSupport() != null) {
+					id = bug.getSupport().getId();
+					employee = entityManager.find(Employee.class, id);
+					bug.setSupport(employee);
+				} else if (bug.getUser() != null) {
+					id = bug.getUser().getId();
+					employee = entityManager.find(Employee.class, id);
+					employee.setUser(null);
+					employee.setSupport(null);
+					bug.setUser(employee);
+				}
 				entityManager.getTransaction().begin();
 				entityManager.persist(bug);
 				entityManager.getTransaction().commit();
@@ -77,16 +92,16 @@ public class PersistenceManagerImpl implements PersistenceManager {
 		String bugQuery;
 
 		if (status != null) {
-			bugQuery = "SELECT b from BUG b WHERE b.status=:status";
+			bugQuery = "SELECT b from Bug b WHERE b.status=:status";
 		} else {
-			bugQuery = "SELECT b from BUG b";
+			bugQuery = "SELECT b from Bug b";
 		}
 
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 
 		Query query = entityManager.createQuery(bugQuery);
 		if (status != null) {
-			query.setParameter("status", status.toString());
+			query.setParameter("status", status);
 		}
 		if (entityManager != null) {
 			try {
@@ -133,5 +148,72 @@ public class PersistenceManagerImpl implements PersistenceManager {
 			}
 		}
 		return employee;
+	}
+
+	@Override
+	public Employee getEmployee(int id) {
+
+		Employee employee = null;
+
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		if (entityManager != null) {
+			try {
+				employee = entityManager.find(Employee.class, id);
+			} catch (PersistenceException persistenceException) {
+				persistenceException.printStackTrace();
+			} finally {
+				if (entityManager != null) {
+					entityManager.close();
+				}
+			}
+		}
+		return employee;
+	}
+
+	@Override
+	public Bug getBug(int id) {
+
+		Bug bug = null;
+
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		if (entityManager != null) {
+			try {
+				bug = entityManager.find(Bug.class, id);
+			} catch (PersistenceException persistenceException) {
+				persistenceException.printStackTrace();
+			} finally {
+				if (entityManager != null) {
+					entityManager.close();
+				}
+			}
+		}
+		return bug;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Employee> getAllEmployee(Role role) {
+
+		List<Employee> employeeList = null;
+
+		String allEmployeeQuery;
+
+		allEmployeeQuery = "from Employee e where e.role=:role";
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		Query query = entityManager.createQuery(allEmployeeQuery);
+		query.setParameter("role", role);
+
+		if (entityManager != null) {
+			try {
+				employeeList = (List<Employee>) query.getResultList();
+			} catch (PersistenceException persistenceException) {
+				persistenceException.printStackTrace();
+			} finally {
+				if (entityManager != null) {
+					entityManager.close();
+				}
+			}
+		}
+		return employeeList;
 	}
 }

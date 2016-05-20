@@ -9,6 +9,7 @@
 <title>Submit Bug</title>
 </head>
 <body>
+	<a href="./login">Click here to go back to login</a>
 	<form action="submitBug.do" method="post">
 		<table>
 			<tr>
@@ -22,9 +23,12 @@
 			<tr>
 				<td colspan="2"><input type="submit" value="Submit"></td>
 			</tr>
+			<tr>
+				<td><input type="hidden" value="${userId }" name="userId"></td>
+			</tr>
 		</table>
 	</form>
-	<table>
+	<table border="1">
 		<tr>
 			<td>Bug ID</td>
 			<td>Title</td>

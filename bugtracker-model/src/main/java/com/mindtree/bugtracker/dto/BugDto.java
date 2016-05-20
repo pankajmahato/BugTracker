@@ -2,7 +2,6 @@ package com.mindtree.bugtracker.dto;
 
 import java.util.Date;
 
-import com.mindtree.bugtracker.model.Employee;
 import com.mindtree.bugtracker.model.Status;
 
 public class BugDto {
@@ -11,8 +10,10 @@ public class BugDto {
 	private String title;
 	private String description;
 	private Date dateSubmitted;
-	private Employee user;
-	private Employee support;
+	private EmployeeDto user;
+	private String userId;
+	private EmployeeDto support;
+	private String supportId;
 	private Status status;
 
 	public int getId() {
@@ -47,19 +48,19 @@ public class BugDto {
 		this.dateSubmitted = dateSubmitted;
 	}
 
-	public Employee getUser() {
+	public EmployeeDto getUser() {
 		return user;
 	}
 
-	public void setUser(Employee user) {
+	public void setUser(EmployeeDto user) {
 		this.user = user;
 	}
 
-	public Employee getSupport() {
+	public EmployeeDto getSupport() {
 		return support;
 	}
 
-	public void setSupport(Employee support) {
+	public void setSupport(EmployeeDto support) {
 		this.support = support;
 	}
 
@@ -69,6 +70,22 @@ public class BugDto {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getSupportId() {
+		return supportId;
+	}
+
+	public void setSupportId(String supportId) {
+		this.supportId = supportId;
 	}
 
 }

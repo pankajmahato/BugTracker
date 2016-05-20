@@ -5,7 +5,7 @@ import java.util.Set;
 import com.mindtree.bugtracker.model.Bug;
 import com.mindtree.bugtracker.model.Role;
 
-public class LoginDto {
+public class EmployeeDto {
 
 	private int id;
 	private String name;

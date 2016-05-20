@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mindtree.bugtracker.model.Bug;
 import com.mindtree.bugtracker.model.Employee;
+import com.mindtree.bugtracker.model.Role;
 import com.mindtree.bugtracker.model.Status;
 
 public interface PersistenceManager {
@@ -15,5 +16,11 @@ public interface PersistenceManager {
 	List<Bug> getAllBugs(Status status);
 
 	Employee validateEmployee(Employee employee);
+
+	Employee getEmployee(int id);
+
+	List<Employee> getAllEmployee(Role role);
+
+	Bug getBug(int id);
 
 }
