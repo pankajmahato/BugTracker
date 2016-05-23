@@ -13,7 +13,7 @@ public interface PersistenceManager {
 
 	List<Bug> getBugs(Employee employee);
 
-	List<Bug> getAllBugs(Status status);
+	List<Bug> getAllBugs(Status status, Employee employee);
 
 	Employee validateEmployee(Employee employee);
 
@@ -22,5 +22,9 @@ public interface PersistenceManager {
 	List<Employee> getAllEmployee(Role role);
 
 	Bug getBug(int id);
+
+	boolean assignBugs(List<Bug> bugs);
+
+	boolean reviewBugs(List<Bug> bugs);
 
 }

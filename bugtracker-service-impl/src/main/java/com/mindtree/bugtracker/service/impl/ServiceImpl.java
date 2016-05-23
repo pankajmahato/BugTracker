@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mindtree.bugtracker.dto.BugDto;
+import com.mindtree.bugtracker.dto.BugListDto;
 import com.mindtree.bugtracker.dto.EmployeeDto;
 import com.mindtree.bugtracker.model.Bug;
 import com.mindtree.bugtracker.model.Employee;
@@ -12,6 +13,7 @@ import com.mindtree.bugtracker.model.Status;
 import com.mindtree.bugtracker.persistence.impl.PersistenceManagerImpl;
 import com.mindtree.bugtracker.persistence.interfaces.PersistenceManager;
 import com.mindtree.bugtracker.service.interfaces.Service;
+import com.mindtree.bugtracker.util.PasswordUtil;
 
 public class ServiceImpl implements Service {
 
@@ -57,6 +59,9 @@ public class ServiceImpl implements Service {
 
 		employee = persistenceManager.validateEmployee(employee);
 		if (employee != null) {
+			if (!PasswordUtil.validatePassword(employeeDto.getPassword(), employee.getPassword())) {
+				return null;
+			}
 			employeeDto.setId(employee.getId());
 			employeeDto.setRole(employee.getRole());
 			employeeDto.setUser(employee.getUser());
@@ -92,14 +97,20 @@ public class ServiceImpl implements Service {
 	}
 
 	@Override
-	public List<BugDto> getAllBugs(Status status) {
+	public List<BugDto> getAllBugs(Status status, EmployeeDto employeeDto) {
 
 		List<BugDto> bugListDto = new ArrayList<>();
 		List<Bug> bugList = null;
 
+		Employee employee = new Employee();
+
 		BugDto bugDto = null;
 
-		bugList = persistenceManager.getAllBugs(status);
+		employee.setId(employeeDto.getId());
+		employee.setName(employeeDto.getName());
+		employee.setRole(employeeDto.getRole());
+
+		bugList = persistenceManager.getAllBugs(status, employee);
 
 		for (Bug b : bugList) {
 			bugDto = new BugDto();
@@ -108,31 +119,31 @@ public class ServiceImpl implements Service {
 			bugDto.setId(b.getId());
 			bugDto.setStatus(b.getStatus());
 
-			EmployeeDto employeeDto = new EmployeeDto();
-			Employee employee = b.getSupport();
-			if (employee != null) {
-				employeeDto.setId(employee.getId());
-				employeeDto.setName(employee.getName());
-				employeeDto.setPassword(employee.getPassword());
-				employeeDto.setRole(employee.getRole());
+			EmployeeDto employeeDtoTemp = new EmployeeDto();
+			Employee employeeTemp = b.getSupport();
+			if (employeeTemp != null) {
+				employeeDtoTemp.setId(employeeTemp.getId());
+				employeeDtoTemp.setName(employeeTemp.getName());
+				employeeDtoTemp.setPassword(employeeTemp.getPassword());
+				employeeDtoTemp.setRole(employeeTemp.getRole());
 			} else {
-				employeeDto = null;
+				employeeDtoTemp = null;
 			}
-			bugDto.setSupport(employeeDto);
+			bugDto.setSupport(employeeDtoTemp);
 			bugDto.setTitle(b.getTitle());
 
-			employeeDto = new EmployeeDto();
-			employee = b.getUser();
-			if (employee != null) {
-				employeeDto.setId(employee.getId());
-				employeeDto.setName(employee.getName());
-				employeeDto.setPassword(employee.getPassword());
-				employeeDto.setRole(employee.getRole());
+			employeeDtoTemp = new EmployeeDto();
+			employeeTemp = b.getUser();
+			if (employeeTemp != null) {
+				employeeDtoTemp.setId(employeeTemp.getId());
+				employeeDtoTemp.setName(employeeTemp.getName());
+				employeeDtoTemp.setPassword(employeeTemp.getPassword());
+				employeeDtoTemp.setRole(employeeTemp.getRole());
 			} else {
-				employeeDto = null;
+				employeeDtoTemp = null;
 			}
 
-			bugDto.setUser(employeeDto);
+			bugDto.setUser(employeeDtoTemp);
 
 			bugListDto.add(bugDto);
 
@@ -208,5 +219,52 @@ public class ServiceImpl implements Service {
 			employeeDtoList.add(employeeDto);
 		}
 		return employeeDtoList;
+	}
+
+	@Override
+	public boolean assignBugs(BugListDto bugListDto) {
+
+		boolean success = true;
+
+		ArrayList<Bug> bugs = new ArrayList<>();
+		Bug bug = null;
+		Employee support = null;
+
+		for (BugDto bugDto : bugListDto.getBugListDto()) {
+			if (bugDto != null && bugDto.getSupport().getId() != 0) {
+				bug = new Bug();
+				support = new Employee();
+				support.setId(bugDto.getSupport().getId());
+				bug.setId(bugDto.getId());
+				bug.setSupport(support);
+
+				bugs.add(bug);
+			}
+		}
+
+		success = persistenceManager.assignBugs(bugs);
+
+		return success;
+	}
+
+	@Override
+	public boolean reviewBugs(BugListDto bugListDto) {
+
+		boolean success = true;
+
+		ArrayList<Bug> bugs = new ArrayList<>();
+		Bug bug = null;
+
+		for (BugDto bugDto : bugListDto.getBugListDto()) {
+
+			bug = new Bug();
+			bug.setId(bugDto.getId());
+
+			bugs.add(bug);
+		}
+
+		success = persistenceManager.reviewBugs(bugs);
+
+		return success;
 	}
 }

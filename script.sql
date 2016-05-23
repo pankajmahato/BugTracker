@@ -46,7 +46,7 @@ CREATE TABLE `bug` (
 
 LOCK TABLES `bug` WRITE;
 /*!40000 ALTER TABLE `bug` DISABLE KEYS */;
-INSERT INTO `bug` VALUES (1,'2016-05-19 16:51:54','description1','CLOSED','title1',1,2),(2,'2016-05-19 16:53:31','description2','CLOSED','title2',3,4),(6,'2016-05-20 15:05:54','sf','OPEN','This is 1st title of today',NULL,2),(7,'2016-05-20 15:11:49','sdfsdfsdf','OPEN','This is 2nd title of today',NULL,2);
+INSERT INTO `bug` (`ID`, `DATE_SUBMITTED`, `DESCRIPTION`, `STATUS`, `TITLE`, `SUPPORT_ID`, `USER_ID`) VALUES (1,'2016-05-19 16:51:54','description1','CLOSED','title1',1,2),(2,'2016-05-19 16:53:31','description2','CLOSED','title2',3,4),(6,'2016-05-20 15:05:54','sf','CLOSED','This is 1st title of today',1,2),(7,'2016-05-20 15:11:49','sdfsdfsdf','CLOSED','This is 2nd title of today',3,2),(8,'2016-05-23 17:19:49','Drawer key is missing','CLOSED','Key missing',3,2),(9,'2016-05-23 17:20:15','Desktop mouse not working','OPEN','mouse is not working',NULL,4),(10,'2016-05-23 17:20:58','Desktop keyboard missing','CLOSED','Keyboard missing',3,4),(11,'2016-05-23 17:21:20','No internet access on desktop','OPEN','No internet',NULL,2),(12,'2016-05-23 17:21:51','Not working','CLOSED','Telephone',3,4),(13,'2016-05-23 18:44:18','blah','IN_PROGRESS','blah',1,2);
 /*!40000 ALTER TABLE `bug` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -68,7 +68,7 @@ CREATE TABLE `bug_seq` (
 
 LOCK TABLES `bug_seq` WRITE;
 /*!40000 ALTER TABLE `bug_seq` DISABLE KEYS */;
-INSERT INTO `bug_seq` VALUES (8);
+INSERT INTO `bug_seq` (`next_val`) VALUES (14);
 /*!40000 ALTER TABLE `bug_seq` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +94,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'support1','password','SUPPORT'),(2,'user1','password','USER'),(3,'support2','password','SUPPORT'),(4,'user2','password','USER'),(5,'admin','admin','ADMIN');
+INSERT INTO `employee` (`ID`, `NAME`, `PASSWORD`, `ROLE`) VALUES (1,'support1','1000:1eb673858f264f05e1ea882f25720a96:f11e7b5df7f1b46ba5d969dcc749a70ad7123420881b1e7cf862ebaeaaa0da5f6848b0f2e0d3e69e94e42a688444dbf5ff6fc38abe989ca8d3cb2ee4afb8e65c','SUPPORT'),(2,'user1','1000:7891d6b637eda6b286096d2945fd0ad7:bb064cb3f1149c39e13d9fd707c7d70aca6fff5a5eab3438ccd3115e1220db82274cc259ecb24c4e88868d5de5aeaf70e5b08176a2371fba650497757b826b2d','USER'),(3,'support2','1000:004e2c60a349b2c9441ed8d2fe2f933b:3b62be88a691abfa766077bccf82bb0659c25d511b0a45abbc77c14c93e5d534efe289fb390cfa70213bf0ce1996e2e41dd076b25d9ce6692ef6254f9e7151cf','SUPPORT'),(4,'user2','1000:1e6448c41ed7e339f8b05a623bc97516:aaf9114f26b1a01a09698d1f0ff2a9caa44443b0ea4e1e3fa86ce211a1dbd71572485055e3ee1bf29110f9f246f25afd3d72771de15a7fbe22e05f60e7b019c8','USER'),(5,'admin','1000:a4f06ced25df4ff104db2236843a36ca:6139013924169de0058502e07c4797bfa97200cf8aeb998410fb26365938499801b76c74b219ba748503668d2b95a6e07db9a178c12ab998f86ae7fb88fb4759','ADMIN');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,7 +116,7 @@ CREATE TABLE `employee_seq` (
 
 LOCK TABLES `employee_seq` WRITE;
 /*!40000 ALTER TABLE `employee_seq` DISABLE KEYS */;
-INSERT INTO `employee_seq` VALUES (5);
+INSERT INTO `employee_seq` (`next_val`) VALUES (5);
 /*!40000 ALTER TABLE `employee_seq` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,4 +137,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-20 19:55:55
+-- Dump completed on 2016-05-23 19:17:46

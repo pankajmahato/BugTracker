@@ -11,24 +11,7 @@
 <body>
 	Welcome, Admin
 	<form:form method="POST" action="assignBug.do"
-		modelAttribute="adminBugs">
-		<%--	<table>
-			<tr>
-				<td><form:label path="name">Name</form:label></td>
-				<td><form:input path="name" /></td>
-			</tr>
-			<tr>
-				<td><form:label path="age">Age</form:label></td>
-				<td><form:input path="age" /></td>
-			</tr>
-			<tr>
-				<td><form:label path="id">id</form:label></td>
-				<td><form:input path="id" /></td>
-			</tr>
-			<tr>
-				<td colspan="2"><input type="submit" value="Submit" /></td>
-			</tr>
-		</table> --%>
+		modelAttribute="bugListDto">
 		<table border="1">
 			<tr>
 				<td>Bug ID</td>
@@ -42,8 +25,8 @@
 			<c:forEach items="${adminBugs.bugListDto}" var="bug"
 				varStatus="status">
 				<tr>
-					<td>${bug.id }</td>
-					<form:input path="bugListDto[${status.index}].id" type="hidden" />
+					<td>${bug.id }<input name="bugListDto[${status.index}].id"
+						type="hidden" value="${bug.id }" /></td>
 					<td>${bug.title }</td>
 					<td>${bug.description }</td>
 					<td>${bug.dateSubmitted }</td>
@@ -51,7 +34,7 @@
 					<td><c:choose>
 							<c:when test="${empty bug.support}">
 								<form:select path="bugListDto[${status.index}].support.id">
-									<form:option value="">Select</form:option>
+									<form:option value="0">Select</form:option>
 									<form:options items="${employeeList}" itemLabel="name"
 										itemValue="id" />
 								</form:select>
@@ -59,12 +42,13 @@
 							<c:otherwise> ${bug.support.name }
 				    		</c:otherwise>
 						</c:choose></td>
-					<form:input path="bugListDto[${status.index}].support"
-						type="hidden" />
+					<%-- <form:input path="bugListDto[${status.index}].support"
+						type="hidden" /> --%>
 					<td>${bug.status }</td>
 				</tr>
 			</c:forEach>
 		</table>
+		<input type="submit" value="Submit">
 	</form:form>
 </body>
 </html>

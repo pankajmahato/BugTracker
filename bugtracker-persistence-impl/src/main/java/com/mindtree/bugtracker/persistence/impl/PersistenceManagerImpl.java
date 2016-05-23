@@ -62,9 +62,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
 		String bugQuery;
 
 		if (employee.getRole().equals(Role.USER)) {
-			bugQuery = "SELECT b from BUG b WHERE b.user.id=:id";
+			bugQuery = "SELECT b from Bug b WHERE b.user.id=:id";
 		} else {
-			bugQuery = "SELECT b from BUG b WHERE b.support.id=:id";
+			bugQuery = "SELECT b from Bug b WHERE b.support.id=:id";
 		}
 
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -87,7 +87,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Bug> getAllBugs(Status status) {
+	public List<Bug> getAllBugs(Status status, Employee employee) {
 		List<Bug> bugList = null;
 		String bugQuery;
 
@@ -96,12 +96,19 @@ public class PersistenceManagerImpl implements PersistenceManager {
 		} else {
 			bugQuery = "SELECT b from Bug b";
 		}
-
+		if (employee.getRole().equals(Role.USER)) {
+			bugQuery += " AND b.user.id=:id";
+		} else if (employee.getRole().equals(Role.SUPPORT)) {
+			bugQuery += " AND b.support.id=:id";
+		}
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 
 		Query query = entityManager.createQuery(bugQuery);
 		if (status != null) {
 			query.setParameter("status", status);
+		}
+		if (!employee.getRole().equals(Role.ADMIN)) {
+			query.setParameter("id", employee.getId());
 		}
 		if (entityManager != null) {
 			try {
@@ -125,17 +132,16 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
 		String loginQuery;
 
-		loginQuery = "from Employee e WHERE e.name=:username AND e.password=:password";
+		loginQuery = "from Employee e WHERE e.name=:username";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		Query query = entityManager.createQuery(loginQuery);
 		query.setParameter("username", employee.getName());
-		query.setParameter("password", employee.getPassword());
 		if (entityManager != null) {
 			try {
 				employeeList = (List<Employee>) query.getResultList();
 				if (employeeList != null && employeeList.size() == 1) {
 					employee = employeeList.get(0);
-					employee.setPassword(null);
+					// employee.setPassword(null);
 				} else {
 					employee = null;
 				}
@@ -215,5 +221,78 @@ public class PersistenceManagerImpl implements PersistenceManager {
 			}
 		}
 		return employeeList;
+	}
+
+	@Override
+	public boolean assignBugs(List<Bug> bugs) {
+
+		boolean success = true;
+
+		Bug bug = null;
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+		if (entityManager != null) {
+			try {
+				if (bugs != null) {
+					entityManager.getTransaction().begin();
+					for (Bug b : bugs) {
+						bug = entityManager.find(Bug.class, b.getId());
+						if (bug != null) {
+							bug.setStatus(Status.IN_PROGRESS);
+
+							Employee support = entityManager.find(Employee.class, b.getSupport().getId());
+							support.setId(b.getSupport().getId());
+
+							bug.setSupport(support);
+
+							entityManager.persist(bug);
+						}
+					}
+					entityManager.getTransaction().commit();
+				}
+			} catch (PersistenceException persistenceException) {
+				persistenceException.printStackTrace();
+				success = false;
+			} finally {
+				if (entityManager != null) {
+					entityManager.close();
+				}
+			}
+		}
+		return success;
+	}
+
+	@Override
+	public boolean reviewBugs(List<Bug> bugs) {
+
+		boolean success = true;
+
+		Bug bug = null;
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+		if (entityManager != null) {
+			try {
+				if (bugs != null) {
+					entityManager.getTransaction().begin();
+					for (Bug b : bugs) {
+						bug = entityManager.find(Bug.class, b.getId());
+						if (bug != null) {
+							bug.setStatus(Status.CLOSED);
+
+							entityManager.persist(bug);
+						}
+					}
+					entityManager.getTransaction().commit();
+				}
+			} catch (PersistenceException persistenceException) {
+				persistenceException.printStackTrace();
+				success = false;
+			} finally {
+				if (entityManager != null) {
+					entityManager.close();
+				}
+			}
+		}
+		return success;
 	}
 }

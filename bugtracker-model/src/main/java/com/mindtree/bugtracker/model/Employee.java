@@ -1,6 +1,6 @@
 package com.mindtree.bugtracker.model;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -36,10 +36,10 @@ public class Employee {
 	private Role role;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
-	private Set<Bug> user;
+	private List<Bug> user;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "support", fetch = FetchType.EAGER)
-	private Set<Bug> support;
+	private List<Bug> support;
 
 	public int getId() {
 		return id;
@@ -73,19 +73,19 @@ public class Employee {
 		this.role = role;
 	}
 
-	public Set<Bug> getUser() {
+	public List<Bug> getUser() {
 		return user;
 	}
 
-	public void setUser(Set<Bug> user) {
+	public void setUser(List<Bug> user) {
 		this.user = user;
 	}
 
-	public Set<Bug> getSupport() {
+	public List<Bug> getSupport() {
 		return support;
 	}
 
-	public void setSupport(Set<Bug> support) {
+	public void setSupport(List<Bug> support) {
 		this.support = support;
 	}
 

@@ -1,6 +1,6 @@
 package com.mindtree.bugtracker.dto;
 
-import java.util.Set;
+import java.util.List;
 
 import com.mindtree.bugtracker.model.Bug;
 import com.mindtree.bugtracker.model.Role;
@@ -11,8 +11,8 @@ public class EmployeeDto {
 	private String name;
 	private String password;
 	private Role role;
-	private Set<Bug> user;
-	private Set<Bug> support;
+	private List<Bug> user;
+	private List<Bug> support;
 
 	public int getId() {
 		return id;
@@ -46,19 +46,19 @@ public class EmployeeDto {
 		this.role = role;
 	}
 
-	public Set<Bug> getUser() {
+	public List<Bug> getUser() {
 		return user;
 	}
 
-	public void setUser(Set<Bug> user) {
+	public void setUser(List<Bug> user) {
 		this.user = user;
 	}
 
-	public Set<Bug> getSupport() {
+	public List<Bug> getSupport() {
 		return support;
 	}
 
-	public void setSupport(Set<Bug> support) {
+	public void setSupport(List<Bug> support) {
 		this.support = support;
 	}
 
