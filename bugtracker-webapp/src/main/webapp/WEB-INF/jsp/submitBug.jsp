@@ -27,6 +27,8 @@
 				<td><input type="hidden" value="${userId }" name="userId"></td>
 			</tr>
 		</table>
+		<input type="hidden" name="${_csrf.parameterName}"
+			value="${_csrf.token}" />
 	</form>
 	<table border="1">
 		<tr>

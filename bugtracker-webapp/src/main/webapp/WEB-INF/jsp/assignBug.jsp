@@ -49,6 +49,8 @@
 			</c:forEach>
 		</table>
 		<input type="submit" value="Submit">
+		<input type="hidden" name="${_csrf.parameterName}"
+			value="${_csrf.token}" />
 	</form:form>
 </body>
 </html>

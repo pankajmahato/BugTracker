@@ -63,6 +63,7 @@ public class ServiceImpl implements Service {
 				return null;
 			}
 			employeeDto.setId(employee.getId());
+			employeeDto.setPassword(employee.getPassword());
 			employeeDto.setRole(employee.getRole());
 			employeeDto.setUser(employee.getUser());
 			employeeDto.setSupport(employee.getSupport());
