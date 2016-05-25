@@ -9,12 +9,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.mindtree.bugtracker.dto.EmployeeDto;
 import com.mindtree.bugtracker.service.impl.ServiceImpl;
 import com.mindtree.bugtracker.service.interfaces.Service;
-import com.mindtree.bugtracker.webapp.dto.AuthenticationDetailsDto;
 
 public class AuthProvider implements AuthenticationProvider {
 
@@ -37,9 +35,12 @@ public class AuthProvider implements AuthenticationProvider {
 			authorities.add(new SimpleGrantedAuthority(loginDto.getRole().toString()));
 			// }
 
-			UserDetails userDetails = new AuthenticationDetailsDto(loginDto.getName(), loginDto.getPassword(),
-					authorities, loginDto);
-			return new UsernamePasswordAuthenticationToken(userDetails, loginDto.getPassword(), authorities);
+			/*
+			 * UserDetails userDetails = new
+			 * AuthenticationDetailsDto(loginDto.getName(),
+			 * loginDto.getPassword(), authorities, loginDto);
+			 */
+			return new UsernamePasswordAuthenticationToken(loginDto, loginDto.getPassword(), authorities);
 		} else {
 			return null;
 		}

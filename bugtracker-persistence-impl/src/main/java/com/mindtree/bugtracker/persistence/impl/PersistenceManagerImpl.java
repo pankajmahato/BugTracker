@@ -61,7 +61,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 		List<Bug> bugList = null;
 		String bugQuery;
 
-		if (employee.getRole().equals(Role.USER)) {
+		if (employee.getRole().equals(Role.ROLE_USER)) {
 			bugQuery = "SELECT b from Bug b WHERE b.user.id=:id";
 		} else {
 			bugQuery = "SELECT b from Bug b WHERE b.support.id=:id";
@@ -96,9 +96,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
 		} else {
 			bugQuery = "SELECT b from Bug b";
 		}
-		if (employee.getRole().equals(Role.USER)) {
+		if (employee.getRole().equals(Role.ROLE_USER)) {
 			bugQuery += " AND b.user.id=:id";
-		} else if (employee.getRole().equals(Role.SUPPORT)) {
+		} else if (employee.getRole().equals(Role.ROLE_SUPPORT)) {
 			bugQuery += " AND b.support.id=:id";
 		}
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -107,7 +107,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 		if (status != null) {
 			query.setParameter("status", status);
 		}
-		if (!employee.getRole().equals(Role.ADMIN)) {
+		if (!employee.getRole().equals(Role.ROLE_ADMIN)) {
 			query.setParameter("id", employee.getId());
 		}
 		if (entityManager != null) {

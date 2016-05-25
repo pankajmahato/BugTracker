@@ -4,8 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,19 +23,17 @@ import com.mindtree.bugtracker.model.Role;
 import com.mindtree.bugtracker.model.Status;
 import com.mindtree.bugtracker.service.impl.ServiceImpl;
 import com.mindtree.bugtracker.service.interfaces.Service;
-import com.mindtree.bugtracker.webapp.dto.AuthenticationDetailsDto;
 
 @Controller
 public class FrontController {
 
 	Service service = new ServiceImpl();
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView login() {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("login");
-		return modelAndView;
-	}
+	/*
+	 * @RequestMapping(value = "/login", method = RequestMethod.GET) public
+	 * ModelAndView login() { ModelAndView modelAndView = new ModelAndView();
+	 * modelAndView.setViewName("login"); return modelAndView; }
+	 */
 
 	@RequestMapping(value = "/403", method = RequestMethod.GET)
 	public ModelAndView forbidden() {
@@ -41,18 +42,27 @@ public class FrontController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/login1", method = RequestMethod.POST)
-	public ModelAndView login(@RequestParam(value = "err", required = false) String err,
+	@RequestMapping(value = "/login")
+	public ModelAndView login(@RequestParam(value = "error", required = false) String err,
 			@RequestParam(value = "logout", required = false) String logout) {
 		ModelAndView modelAndView = new ModelAndView();
 		if (err != null) {
-			modelAndView.addObject("err", "Invalid username and password!");
+			modelAndView.addObject("error", "Invalid username and password!");
 		}
 		if (logout != null) {
-			modelAndView.addObject("msg", "You've been logged out successfully.");
+			modelAndView.addObject("message", "You've been logged out successfully.");
 		}
 		modelAndView.setViewName("login");
 		return modelAndView;
+	}
+
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		return "redirect:/login?logout";
 	}
 
 	@RequestMapping(value = "/submitBug.do", method = RequestMethod.POST)
@@ -77,47 +87,29 @@ public class FrontController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/home.do", method = RequestMethod.POST)
-	public ModelAndView home(HttpServletRequest request) {
+	@RequestMapping(value = "/home.do", method = RequestMethod.GET)
+	public ModelAndView home() {
 		ModelAndView modelAndView = new ModelAndView();
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
 
 		EmployeeDto loginDto = new EmployeeDto();
-		loginDto.setName(username);
-		loginDto.setPassword(password);
-		System.out.println((SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
-		loginDto = ((AuthenticationDetailsDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				.getEmployeeDto();
+		loginDto = ((EmployeeDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 		String target = "login";
-		// List<Bug> bugList = null;
 		BugListDto bugListDto = new BugListDto();
 		List<EmployeeDto> employeeDtoList = null;
 
-		if (loginDto == null) {
-			target = "login";
-			modelAndView.addObject("message", "Invalid Login credentials");
-		} else if (loginDto.getRole().equals(Role.USER)) {
+		if (loginDto.getRole().equals(Role.ROLE_USER)) {
 			target = "submitBug";
 			bugListDto.setBugListDto(service.getAllBugs(Status.IN_PROGRESS, loginDto));
 			modelAndView.addObject("userBugs", bugListDto);
 			modelAndView.addObject("userId", loginDto.getId());
-			/*
-			 * modelAndView.addObject("userBugs", loginDto.getUser());
-			 * modelAndView.addObject("userId", loginDto.getId());
-			 */
-		} else if (loginDto.getRole().equals(Role.SUPPORT)) {
+		} else if (loginDto.getRole().equals(Role.ROLE_SUPPORT)) {
 			target = "reviewBug";
 			bugListDto.setBugListDto(service.getAllBugs(Status.IN_PROGRESS, loginDto));
 			modelAndView.addObject("bugListDto", bugListDto);
-			/*
-			 * modelAndView.addObject("supportBugs", loginDto.getSupport());
-			 * modelAndView.addObject("supportId", loginDto.getId());
-			 */
-		} else if (loginDto.getRole().equals(Role.ADMIN)) {
+		} else if (loginDto.getRole().equals(Role.ROLE_ADMIN)) {
 			target = "assignBug";
 			bugListDto.setBugListDto(service.getAllBugs(Status.OPEN, loginDto));
-			employeeDtoList = service.getAllEmployee(Role.SUPPORT);
+			employeeDtoList = service.getAllEmployee(Role.ROLE_SUPPORT);
 			modelAndView.addObject("bugListDto", new BugListDto());
 			modelAndView.addObject("adminBugs", bugListDto);
 			modelAndView.addObject("employeeList", employeeDtoList);

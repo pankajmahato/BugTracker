@@ -9,6 +9,8 @@
 <title>Submit Bug</title>
 </head>
 <body>
+	Welcome user,
+	<br>
 	<a href="./login">Click here to go back to login</a>
 	<form action="submitBug.do" method="post">
 		<table>
@@ -30,27 +32,33 @@
 		<input type="hidden" name="${_csrf.parameterName}"
 			value="${_csrf.token}" />
 	</form>
-	<table border="1">
-		<tr>
-			<td>Bug ID</td>
-			<td>Title</td>
-			<td>Description</td>
-			<td>Submitted Date</td>
-			<td>Submitted By</td>
-			<td>Assigned To</td>
-			<td>Status</td>
-		</tr>
-		<c:forEach items="${userBugs}" var="bug">
+	<c:if test="${not empty userBugs && not empty userBugs.bugListDto }">
+		<table border="1">
 			<tr>
-				<td>${bug.id }</td>
-				<td>${bug.title }</td>
-				<td>${bug.description }</td>
-				<td>${bug.dateSubmitted }</td>
-				<td>${bug.user.name }</td>
-				<td>${bug.support.name }</td>
-				<td>${bug.status }</td>
+				<td>Bug ID</td>
+				<td>Title</td>
+				<td>Description</td>
+				<td>Submitted Date</td>
+				<td>Submitted By</td>
+				<td>Assigned To</td>
+				<td>Status</td>
 			</tr>
-		</c:forEach>
-	</table>
+			<c:forEach items="${userBugs.bugListDto}" var="bug">
+				<tr>
+					<td>${bug.id }</td>
+					<td>${bug.title }</td>
+					<td>${bug.description }</td>
+					<td>${bug.dateSubmitted }</td>
+					<td>${bug.user.name }</td>
+					<td>${bug.support.name }</td>
+					<td>${bug.status }</td>
+				</tr>
+			</c:forEach>
+		</table>
+	</c:if>
+	<form action="logout">
+		<input type="submit" value="Logout"><input type="hidden"
+			name="${_csrf.parameterName}" value="${_csrf.token}" />
+	</form>
 </body>
 </html>

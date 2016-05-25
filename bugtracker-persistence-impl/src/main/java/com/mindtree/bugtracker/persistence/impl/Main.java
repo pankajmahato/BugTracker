@@ -15,12 +15,12 @@ public class Main {
 		Employee user = new Employee();
 		user.setName("name");
 		user.setPassword("password");
-		user.setRole(Role.USER);
+		user.setRole(Role.ROLE_USER);
 
 		Employee support = new Employee();
 		support.setName("name");
 		support.setPassword("password");
-		support.setRole(Role.SUPPORT);
+		support.setRole(Role.ROLE_SUPPORT);
 
 		bug.setDateSubmitted(new Date());
 		bug.setDescription("description");

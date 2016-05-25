@@ -9,6 +9,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+	Welcome Support,
 	<form:form method="POST" action="reviewBug.do"
 		modelAttribute="bugListDto">
 		<table border="1">

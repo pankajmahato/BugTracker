@@ -10,6 +10,7 @@
 </head>
 <body>
 	Welcome, Admin
+	<br>
 	<form:form method="POST" action="assignBug.do"
 		modelAttribute="bugListDto">
 		<table border="1">

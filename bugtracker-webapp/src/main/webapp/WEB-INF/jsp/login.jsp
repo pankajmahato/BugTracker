@@ -8,7 +8,8 @@
 <title>Login</title>
 </head>
 <body>${message }
-	<form action="<c:url value='j_spring_security_check' />" method="post">
+	${error }
+	<form action="login" method="post">
 		<table>
 			<tr>
 				<td>Enter username</td>
